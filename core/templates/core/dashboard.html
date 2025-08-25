@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Use the Inter font for a clean, modern look -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Load Tailwind CSS for easy and responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS for the page */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+
+    <header class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+        <div class="flex items-center space-x-4">
+            <span class="text-gray-600">Welcome, {{ request.user.username }}</span>
+            <a href="{% url 'logout' %}" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-red-600 transition-colors">Logout</a>
+        </div>
+    </header>
+    
+    <!-- Learning & Engagement Metrics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Engagement Metrics</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg text-center">
+                    <p class="text-3xl font-bold text-blue-600">50</p>
+                    <p class="text-gray-500">Total Posts</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg text-center">
+                    <p class="text-3xl font-bold text-green-600">1200</p>
+                    <p class="text-gray-500">Total Views</p>
+                </div>
+                <div class="bg-cyan-50 p-4 rounded-lg text-center">
+                    <p class="text-3xl font-bold text-cyan-600">2</p>
+                    <p class="text-gray-500">Total Events</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                    <p class="text-3xl font-bold text-yellow-600">150</p>
+                    <p class="text-gray-500">Event Attendees</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Card - Placeholder for future features -->
+        <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recent Insights</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="font-medium text-gray-700">Highest viewed post this week: <span class="text-blue-600">"What is a Stablecoin?"</span></p>
+                    <p class="text-sm text-gray-500">Published on August 15, 2025</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="font-medium text-gray-700">Most engaged FAQ: <span class="text-green-600">"Why are cross-border payments so expensive in Africa?"</span></p>
+                    <p class="text-sm text-gray-500">12 comments in the last 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Posts, FAQs, and Events Sections -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Posts Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-blue-600">Posts</h2>
+                <a href="{% url 'create_post' %}" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-blue-700 transition-colors">New Post</a>
+            </div>
+            {% if posts %}
+                <ul class="space-y-4">
+                    {% for post in posts %}
+                        <li class="p-4 border border-gray-200 rounded-lg flex justify-between items-center">
+                            <span class="text-lg font-medium">{{ post.title }}</span>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'edit_post' post.pk %}" class="text-sm text-blue-500 hover:text-blue-700">Edit</a>
+                                <a href="{% url 'delete_post' post.pk %}" class="text-sm text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No posts available.</p>
+            {% endif %}
+        </div>
+        
+        <!-- FAQs Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-green-600">FAQs</h2>
+                <a href="{% url 'create_faq' %}" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-green-700 transition-colors">New FAQ</a>
+            </div>
+            {% if faqs %}
+                <ul class="space-y-4">
+                    {% for faq in faqs %}
+                        <li class="p-4 border border-gray-200 rounded-lg flex justify-between items-center">
+                            <span class="text-lg font-medium">{{ faq.question }}</span>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'edit_faq' faq.pk %}" class="text-sm text-green-500 hover:text-green-700">Edit</a>
+                                <a href="{% url 'delete_faq' faq.pk %}" class="text-sm text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this FAQ?')">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No FAQs available.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Events Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-cyan-600">Events</h2>
+                <a href="{% url 'create_event' %}" class="bg-cyan-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-cyan-700 transition-colors">New Event</a>
+            </div>
+            {% if events %}
+                <ul class="space-y-4">
+                    {% for event in events %}
+                        <li class="p-4 border border-gray-200 rounded-lg flex justify-between items-center">
+                            <span class="text-lg font-medium">{{ event.title }}</span>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'edit_event' event.pk %}" class="text-sm text-cyan-500 hover:text-cyan-700">Edit</a>
+                                <a href="{% url 'delete_event' event.pk %}" class="text-sm text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500">No events scheduled.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
